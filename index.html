@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Автоматический расчет поставок Wildberries</title>
+    <style>
+:root {
+  color-scheme: light;
+  --bg: #f6f7fb;
+  --text: #1e2430;
+  --muted: #6f7a8c;
+  --primary: #3b5bff;
+  --primary-dark: #2a47d8;
+  --card: #ffffff;
+  --accent: #1bd47d;
+  --warning: #f59f0b;
+  --radius: 20px;
+  --shadow: 0 24px 60px rgba(22, 27, 45, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Manrope", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.container {
+  width: min(1200px, 92vw);
+  margin: 0 auto;
+}
+
+.hero {
+  background: radial-gradient(circle at top left, #eef2ff 0%, #f9fafc 45%, #f6f7fb 100%);
+  padding-bottom: 80px;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 0 40px;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.nav-links {
+  display: flex;
+  gap: 24px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.nav-cta {
+  border: none;
+  background: var(--primary);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.hero-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 48px;
+  align-items: center;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  color: var(--primary-dark);
+  margin-bottom: 12px;
+}
+
+.hero-text h1 {
+  font-size: clamp(2rem, 3vw + 1rem, 3.3rem);
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+
+.lead {
+  color: var(--muted);
+  font-size: 1.05rem;
+  margin-bottom: 24px;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+button.primary,
+button.ghost,
+.calc-form button,
+.footer-form button {
+  border: none;
+  font-family: inherit;
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 12px 22px;
+  font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button.primary {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 12px 30px rgba(59, 91, 255, 0.25);
+}
+
+button.primary:hover {
+  transform: translateY(-1px);
+}
+
+button.ghost {
+  background: transparent;
+  border: 1px solid #cfd6e6;
+  color: var(--text);
+}
+
+.hero-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.hero-metrics strong {
+  font-size: 1.2rem;
+}
+
+.hero-metrics span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.hero-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.badge {
+  background: #eef2ff;
+  color: var(--primary-dark);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.stat {
+  margin-bottom: 16px;
+}
+
+.stat p {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.stat h3 {
+  font-size: 1.4rem;
+}
+
+.trend {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.trend.up {
+  color: var(--accent);
+}
+
+.trend.down {
+  color: #ef4444;
+}
+
+.progress {
+  height: 8px;
+  background: #e5e9f2;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), #7b8dff);
+}
+
+.note {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 12px;
+}
+
+.warning {
+  margin: 8px 0 0;
+  color: var(--warning);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.features,
+.calculator,
+.dashboard {
+  padding: 80px 0;
+}
+
+.features h2,
+.calculator h2,
+.dashboard h2 {
+  font-size: clamp(1.7rem, 2.2vw + 1rem, 2.4rem);
+  margin-bottom: 12px;
+}
+
+.section-lead {
+  color: var(--muted);
+  margin-bottom: 32px;
+  max-width: 640px;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.feature-grid article {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 18px 40px rgba(22, 27, 45, 0.08);
+}
+
+.feature-grid h3 {
+  margin-bottom: 8px;
+}
+
+.calculator {
+  background: white;
+}
+
+.calculator-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px;
+  align-items: start;
+}
+
+.calc-form {
+  display: grid;
+  gap: 16px;
+}
+
+.calc-form label {
+  display: grid;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.calc-form input {
+  border: 1px solid #d9deea;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 1rem;
+}
+
+.calc-form button {
+  margin-top: 10px;
+  background: var(--primary);
+  color: white;
+}
+
+.calc-result {
+  background: #f3f5ff;
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: inset 0 0 0 1px #e5e9ff;
+}
+
+.result-card {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  margin: 16px 0;
+}
+
+.result-card h4 {
+  font-size: 2rem;
+  margin-top: 8px;
+}
+
+.result-sub {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.result-list {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.result-list div {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.panel {
+  background: var(--card);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.panel ul {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+  color: var(--muted);
+}
+
+.panel.chart {
+  display: grid;
+  gap: 20px;
+}
+
+.chart-bars {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 6px;
+  align-items: end;
+  height: 160px;
+}
+
+.chart-bars span {
+  background: linear-gradient(180deg, #7b8dff, var(--primary));
+  border-radius: 8px 8px 0 0;
+}
+
+.chart-legend {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.footer {
+  background: #111827;
+  color: white;
+  padding: 60px 0;
+}
+
+.footer-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.footer-form input {
+  padding: 12px 14px;
+  border-radius: 999px;
+  border: none;
+  min-width: 240px;
+}
+
+.footer-form button {
+  background: var(--accent);
+  color: #0b3d22;
+}
+
+@media (max-width: 720px) {
+  .nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+  }
+}
+
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="hero">
+      <nav class="container nav">
+        <div class="logo">TikTak Analytics</div>
+        <div class="nav-links">
+          <a href="#features">Возможности</a>
+          <a href="#calculator">Калькулятор</a>
+          <a href="#dashboard">Дашборд</a>
+        </div>
+        <button class="nav-cta">Запросить демо</button>
+      </nav>
+
+      <div class="container hero-content">
+        <div class="hero-text">
+          <p class="eyebrow">Wildberries • Автопополнение складов</p>
+          <h1>Автоматический расчет поставок на склады Wildberries</h1>
+          <p class="lead">
+            Подключайте остатки по API, учитывайте скорость продаж и прогноз трендов, чтобы
+            отправлять ровно столько, сколько нужно. Минимум ручной работы — максимум товара в
+            наличии.
+          </p>
+          <div class="hero-actions">
+            <button class="primary">Запустить расчет</button>
+            <button class="ghost">Посмотреть прогноз</button>
+          </div>
+          <div class="hero-metrics">
+            <div>
+              <strong>+32%</strong>
+              <span>рост доступности товаров</span>
+            </div>
+            <div>
+              <strong>-18%</strong>
+              <span>снижение залежей</span>
+            </div>
+            <div>
+              <strong>24/7</strong>
+              <span>обновление по API</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-card">
+          <div class="card-header">
+            <span>Сводка поставок</span>
+            <span class="badge">Сегодня</span>
+          </div>
+          <div class="card-body">
+            <div class="stat">
+              <p>Остатки WB</p>
+              <h3>8 420 шт.</h3>
+              <span class="trend up">+6.4% к вчера</span>
+            </div>
+            <div class="stat">
+              <p>Скорость продаж</p>
+              <h3>312 шт/день</h3>
+              <span class="trend down">-3.1% неделя</span>
+            </div>
+            <div class="stat">
+              <p>Рекомендовано к отгрузке</p>
+              <h3>2 180 шт.</h3>
+              <span class="trend up">с учетом тренда</span>
+            </div>
+            <div class="progress">
+              <div class="progress-bar" style="width: 76%"></div>
+            </div>
+            <p class="note">76% SKU в зоне безопасности</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section id="features" class="features">
+        <div class="container">
+          <h2>Контроль поставок без ручных таблиц</h2>
+          <p class="section-lead">
+            Аналитика остатков, темпов продаж и прогноз трендов автоматически превращаются в план
+            отгрузок по каждому складу Wildberries.
+          </p>
+          <div class="feature-grid">
+            <article>
+              <h3>Интеграция по API</h3>
+              <p>Подтягиваем остатки и статус приемки каждые 30 минут.</p>
+            </article>
+            <article>
+              <h3>Скорость продаж</h3>
+              <p>Учитываем сезонность, промо и региональные особенности.</p>
+            </article>
+            <article>
+              <h3>Прогноз трендов</h3>
+              <p>Модель оценивает будущий спрос на 4–12 недель вперед.</p>
+            </article>
+            <article>
+              <h3>Автоплан отгрузок</h3>
+              <p>Формируем план поставок по складам с учетом логистики.</p>
+            </article>
+            <article>
+              <h3>Алерты</h3>
+              <p>Уведомления о риске OOS и затоваривании.</p>
+            </article>
+            <article>
+              <h3>Командная работа</h3>
+              <p>Роли, комментарии и история изменений в одном интерфейсе.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="calculator" class="calculator">
+        <div class="container">
+          <div class="calculator-grid">
+            <div>
+              <h2>Быстрый расчет поставки</h2>
+              <p class="section-lead">
+                Подставьте текущие данные, чтобы получить рекомендованное количество к
+                отгрузке.
+              </p>
+              <form class="calc-form" id="calc-form">
+                <label>
+                  Текущий остаток, шт.
+                  <input type="number" name="stock" value="1200" min="0" />
+                </label>
+                <label>
+                  Средние продажи в день, шт.
+                  <input type="number" name="sales" value="80" min="1" />
+                </label>
+                <label>
+                  Прогноз тренда, %
+                  <input type="number" name="trend" value="12" step="0.1" />
+                </label>
+                <label>
+                  Время поставки, дней
+                  <input type="number" name="lead" value="14" min="1" />
+                </label>
+                <label>
+                  Страховой запас, дней
+                  <input type="number" name="safety" value="7" min="0" />
+                </label>
+                <button type="submit">Рассчитать поставку</button>
+              </form>
+            </div>
+            <div class="calc-result" aria-live="polite">
+              <h3>Рекомендация</h3>
+              <div class="result-card">
+                <p>Плановый объем поставки</p>
+                <h4 id="recommended">1 680 шт.</h4>
+                <p class="result-sub">С учетом тренда и страхового запаса</p>
+              </div>
+              <div class="result-list">
+                <div>
+                  <span>Покрытие в днях</span>
+                  <strong id="coverage">21</strong>
+                </div>
+                <div>
+                  <span>Ожидаемый спрос</span>
+                  <strong id="demand">1 344</strong>
+                </div>
+                <div>
+                  <span>Риск дефицита</span>
+                  <strong id="risk">Низкий</strong>
+                </div>
+              </div>
+              <p class="warning" id="calc-warning" hidden>
+                Проверьте корректность числовых значений, чтобы получить расчет.
+              </p>
+              <p class="note">Формулы можно адаптировать под вашу стратегию.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="dashboard" class="dashboard">
+        <div class="container">
+          <div class="dashboard-header">
+            <h2>Дашборд планирования</h2>
+            <p class="section-lead">Все ключевые метрики в одном экране.</p>
+          </div>
+          <div class="dashboard-grid">
+            <div class="panel">
+              <h4>Топ 5 SKU по риску OOS</h4>
+              <ul>
+                <li>Пижама "Север" — запас 4 дня</li>
+                <li>Плед "Лайт" — запас 6 дней</li>
+                <li>Куртка "Street" — запас 7 дней</li>
+                <li>Рюкзак "Urban" — запас 8 дней</li>
+                <li>Свечи "Home" — запас 9 дней</li>
+              </ul>
+            </div>
+            <div class="panel chart">
+              <h4>Прогноз спроса на 12 недель</h4>
+              <div class="chart-bars">
+                <span style="height: 40%"></span>
+                <span style="height: 52%"></span>
+                <span style="height: 60%"></span>
+                <span style="height: 72%"></span>
+                <span style="height: 68%"></span>
+                <span style="height: 78%"></span>
+                <span style="height: 85%"></span>
+                <span style="height: 90%"></span>
+                <span style="height: 82%"></span>
+                <span style="height: 75%"></span>
+                <span style="height: 70%"></span>
+                <span style="height: 65%"></span>
+              </div>
+              <div class="chart-legend">
+                <span>Недели</span>
+                <span>Спрос</span>
+              </div>
+            </div>
+            <div class="panel">
+              <h4>Автоматические действия</h4>
+              <p>14 поставок готовы к согласованию</p>
+              <button class="ghost">Скачать план</button>
+              <button class="primary">Отправить на WB</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-content">
+        <div>
+          <h4>Получить доступ</h4>
+          <p>Оставьте заявку и мы подключим ваши склады в течение 24 часов.</p>
+        </div>
+        <form class="footer-form">
+          <input type="email" placeholder="email@company.ru" />
+          <button type="submit">Запросить демо</button>
+        </form>
+      </div>
+    </footer>
+
+    <script>
+const form = document.querySelector("#calc-form");
+const recommended = document.querySelector("#recommended");
+const coverage = document.querySelector("#coverage");
+const demand = document.querySelector("#demand");
+const risk = document.querySelector("#risk");
+const warning = document.querySelector("#calc-warning");
+
+const formatNumber = (value) => new Intl.NumberFormat("ru-RU").format(value);
+
+const defaults = {
+  stock: 1200,
+  sales: 80,
+  trend: 12,
+  lead: 14,
+  safety: 7,
+};
+
+const parseNumber = (value, fallback) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+};
+
+const calculate = ({ stock, sales, trend, lead, safety }) => {
+  const trendFactor = 1 + trend / 100;
+  const demandForecast = Math.round(sales * (lead + safety) * trendFactor);
+  const recommendedShipment = Math.max(demandForecast - stock, 0);
+  const coverageDays = Math.round(stock / Math.max(sales, 1));
+
+  let riskLevel = "Низкий";
+  if (coverageDays <= safety) {
+    riskLevel = "Высокий";
+  } else if (coverageDays <= safety + Math.ceil(lead / 2)) {
+    riskLevel = "Средний";
+  }
+
+  return { recommendedShipment, demandForecast, coverageDays, riskLevel };
+};
+
+const updateUI = (values) => {
+  if (values.sales <= 0 || values.lead <= 0 || Number.isNaN(values.stock)) {
+    warning?.removeAttribute("hidden");
+    return;
+  }
+
+  warning?.setAttribute("hidden", "hidden");
+
+  const { recommendedShipment, demandForecast, coverageDays, riskLevel } = calculate(values);
+
+  recommended.textContent = `${formatNumber(recommendedShipment)} шт.`;
+  demand.textContent = formatNumber(demandForecast);
+  coverage.textContent = coverageDays;
+  risk.textContent = riskLevel;
+};
+
+if (form) {
+  const readValues = () => {
+    const formData = new FormData(form);
+    return Object.fromEntries(
+      Array.from(formData.entries()).map(([key, value]) => [
+        key,
+        parseNumber(value, defaults[key]),
+      ])
+    );
+  };
+
+  const handleUpdate = (event) => {
+    if (event) {
+      event.preventDefault();
+    }
+    updateUI(readValues());
+  };
+
+  form.addEventListener("submit", handleUpdate);
+  form.addEventListener("input", handleUpdate);
+
+  updateUI(defaults);
+}
+
+    </script>
+  </body>
+</html>
