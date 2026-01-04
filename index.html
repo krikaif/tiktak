@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Автоматический расчет поставок Wildberries</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="hero">
+      <nav class="container nav">
+        <div class="logo">TikTak Analytics</div>
+        <div class="nav-links">
+          <a href="#features">Возможности</a>
+          <a href="#calculator">Калькулятор</a>
+          <a href="#dashboard">Дашборд</a>
+        </div>
+        <button class="nav-cta">Запросить демо</button>
+      </nav>
+
+      <div class="container hero-content">
+        <div class="hero-text">
+          <p class="eyebrow">Wildberries • Автопополнение складов</p>
+          <h1>Автоматический расчет поставок на склады Wildberries</h1>
+          <p class="lead">
+            Подключайте остатки по API, учитывайте скорость продаж и прогноз трендов, чтобы
+            отправлять ровно столько, сколько нужно. Минимум ручной работы — максимум товара в
+            наличии.
+          </p>
+          <div class="hero-actions">
+            <button class="primary">Запустить расчет</button>
+            <button class="ghost">Посмотреть прогноз</button>
+          </div>
+          <div class="hero-metrics">
+            <div>
+              <strong>+32%</strong>
+              <span>рост доступности товаров</span>
+            </div>
+            <div>
+              <strong>-18%</strong>
+              <span>снижение залежей</span>
+            </div>
+            <div>
+              <strong>24/7</strong>
+              <span>обновление по API</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-card">
+          <div class="card-header">
+            <span>Сводка поставок</span>
+            <span class="badge">Сегодня</span>
+          </div>
+          <div class="card-body">
+            <div class="stat">
+              <p>Остатки WB</p>
+              <h3>8 420 шт.</h3>
+              <span class="trend up">+6.4% к вчера</span>
+            </div>
+            <div class="stat">
+              <p>Скорость продаж</p>
+              <h3>312 шт/день</h3>
+              <span class="trend down">-3.1% неделя</span>
+            </div>
+            <div class="stat">
+              <p>Рекомендовано к отгрузке</p>
+              <h3>2 180 шт.</h3>
+              <span class="trend up">с учетом тренда</span>
+            </div>
+            <div class="progress">
+              <div class="progress-bar" style="width: 76%"></div>
+            </div>
+            <p class="note">76% SKU в зоне безопасности</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section id="features" class="features">
+        <div class="container">
+          <h2>Контроль поставок без ручных таблиц</h2>
+          <p class="section-lead">
+            Аналитика остатков, темпов продаж и прогноз трендов автоматически превращаются в план
+            отгрузок по каждому складу Wildberries.
+          </p>
+          <div class="feature-grid">
+            <article>
+              <h3>Интеграция по API</h3>
+              <p>Подтягиваем остатки и статус приемки каждые 30 минут.</p>
+            </article>
+            <article>
+              <h3>Скорость продаж</h3>
+              <p>Учитываем сезонность, промо и региональные особенности.</p>
+            </article>
+            <article>
+              <h3>Прогноз трендов</h3>
+              <p>Модель оценивает будущий спрос на 4–12 недель вперед.</p>
+            </article>
+            <article>
+              <h3>Автоплан отгрузок</h3>
+              <p>Формируем план поставок по складам с учетом логистики.</p>
+            </article>
+            <article>
+              <h3>Алерты</h3>
+              <p>Уведомления о риске OOS и затоваривании.</p>
+            </article>
+            <article>
+              <h3>Командная работа</h3>
+              <p>Роли, комментарии и история изменений в одном интерфейсе.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="calculator" class="calculator">
+        <div class="container">
+          <div class="calculator-grid">
+            <div>
+              <h2>Быстрый расчет поставки</h2>
+              <p class="section-lead">
+                Подставьте текущие данные, чтобы получить рекомендованное количество к
+                отгрузке.
+              </p>
+              <form class="calc-form" id="calc-form">
+                <label>
+                  Текущий остаток, шт.
+                  <input type="number" name="stock" value="1200" min="0" />
+                </label>
+                <label>
+                  Средние продажи в день, шт.
+                  <input type="number" name="sales" value="80" min="1" />
+                </label>
+                <label>
+                  Прогноз тренда, %
+                  <input type="number" name="trend" value="12" step="0.1" />
+                </label>
+                <label>
+                  Время поставки, дней
+                  <input type="number" name="lead" value="14" min="1" />
+                </label>
+                <label>
+                  Страховой запас, дней
+                  <input type="number" name="safety" value="7" min="0" />
+                </label>
+                <button type="submit">Рассчитать поставку</button>
+              </form>
+            </div>
+            <div class="calc-result" aria-live="polite">
+              <h3>Рекомендация</h3>
+              <div class="result-card">
+                <p>Плановый объем поставки</p>
+                <h4 id="recommended">1 680 шт.</h4>
+                <p class="result-sub">С учетом тренда и страхового запаса</p>
+              </div>
+              <div class="result-list">
+                <div>
+                  <span>Покрытие в днях</span>
+                  <strong id="coverage">21</strong>
+                </div>
+                <div>
+                  <span>Ожидаемый спрос</span>
+                  <strong id="demand">1 344</strong>
+                </div>
+                <div>
+                  <span>Риск дефицита</span>
+                  <strong id="risk">Низкий</strong>
+                </div>
+              </div>
+              <p class="note">Формулы можно адаптировать под вашу стратегию.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="dashboard" class="dashboard">
+        <div class="container">
+          <div class="dashboard-header">
+            <h2>Дашборд планирования</h2>
+            <p class="section-lead">Все ключевые метрики в одном экране.</p>
+          </div>
+          <div class="dashboard-grid">
+            <div class="panel">
+              <h4>Топ 5 SKU по риску OOS</h4>
+              <ul>
+                <li>Пижама "Север" — запас 4 дня</li>
+                <li>Плед "Лайт" — запас 6 дней</li>
+                <li>Куртка "Street" — запас 7 дней</li>
+                <li>Рюкзак "Urban" — запас 8 дней</li>
+                <li>Свечи "Home" — запас 9 дней</li>
+              </ul>
+            </div>
+            <div class="panel chart">
+              <h4>Прогноз спроса на 12 недель</h4>
+              <div class="chart-bars">
+                <span style="height: 40%"></span>
+                <span style="height: 52%"></span>
+                <span style="height: 60%"></span>
+                <span style="height: 72%"></span>
+                <span style="height: 68%"></span>
+                <span style="height: 78%"></span>
+                <span style="height: 85%"></span>
+                <span style="height: 90%"></span>
+                <span style="height: 82%"></span>
+                <span style="height: 75%"></span>
+                <span style="height: 70%"></span>
+                <span style="height: 65%"></span>
+              </div>
+              <div class="chart-legend">
+                <span>Недели</span>
+                <span>Спрос</span>
+              </div>
+            </div>
+            <div class="panel">
+              <h4>Автоматические действия</h4>
+              <p>14 поставок готовы к согласованию</p>
+              <button class="ghost">Скачать план</button>
+              <button class="primary">Отправить на WB</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-content">
+        <div>
+          <h4>Получить доступ</h4>
+          <p>Оставьте заявку и мы подключим ваши склады в течение 24 часов.</p>
+        </div>
+        <form class="footer-form">
+          <input type="email" placeholder="email@company.ru" />
+          <button type="submit">Запросить демо</button>
+        </form>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
