@@ -216,6 +216,13 @@ button.ghost {
   margin-top: 12px;
 }
 
+.warning {
+  margin: 8px 0 0;
+  color: var(--warning);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
 .features,
 .calculator,
 .dashboard {

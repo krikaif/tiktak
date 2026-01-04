@@ -3,8 +3,22 @@ const recommended = document.querySelector("#recommended");
 const coverage = document.querySelector("#coverage");
 const demand = document.querySelector("#demand");
 const risk = document.querySelector("#risk");
+const warning = document.querySelector("#calc-warning");
 
 const formatNumber = (value) => new Intl.NumberFormat("ru-RU").format(value);
+
+const defaults = {
+  stock: 1200,
+  sales: 80,
+  trend: 12,
+  lead: 14,
+  safety: 7,
+};
+
+const parseNumber = (value, fallback) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+};
 
 const calculate = ({ stock, sales, trend, lead, safety }) => {
   const trendFactor = 1 + trend / 100;
@@ -23,8 +37,14 @@ const calculate = ({ stock, sales, trend, lead, safety }) => {
 };
 
 const updateUI = (values) => {
-  const { recommendedShipment, demandForecast, coverageDays, riskLevel } =
-    calculate(values);
+  if (values.sales <= 0 || values.lead <= 0 || Number.isNaN(values.stock)) {
+    warning?.removeAttribute("hidden");
+    return;
+  }
+
+  warning?.setAttribute("hidden", "hidden");
+
+  const { recommendedShipment, demandForecast, coverageDays, riskLevel } = calculate(values);
 
   recommended.textContent = `${formatNumber(recommendedShipment)} шт.`;
   demand.textContent = formatNumber(demandForecast);
@@ -33,20 +53,25 @@ const updateUI = (values) => {
 };
 
 if (form) {
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
+  const readValues = () => {
     const formData = new FormData(form);
-    const values = Object.fromEntries(
-      Array.from(formData.entries()).map(([key, value]) => [key, Number(value)])
+    return Object.fromEntries(
+      Array.from(formData.entries()).map(([key, value]) => [
+        key,
+        parseNumber(value, defaults[key]),
+      ])
     );
-    updateUI(values);
-  });
+  };
 
-  updateUI({
-    stock: 1200,
-    sales: 80,
-    trend: 12,
-    lead: 14,
-    safety: 7,
-  });
+  const handleUpdate = (event) => {
+    if (event) {
+      event.preventDefault();
+    }
+    updateUI(readValues());
+  };
+
+  form.addEventListener("submit", handleUpdate);
+  form.addEventListener("input", handleUpdate);
+
+  updateUI(defaults);
 }
